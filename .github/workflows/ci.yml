@@ -36,7 +36,7 @@ jobs:
         run: pnpm --filter tw-easing-gradients build
 
       - name: Type check
-        run: pnpm --filter tw-easing-gradients tsc --noEmit -p packages/tw-easing-gradients/tsconfig.json
+        run: pnpm --filter tw-easing-gradients typecheck
 
       - name: Run tests
         run: pnpm --filter tw-easing-gradients test

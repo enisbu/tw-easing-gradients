@@ -20,7 +20,8 @@
 		"dev": "tsup src/index.ts --format cjs,esm --dts --watch",
 		"test": "vitest run",
 		"test:watch": "vitest",
-		"test:coverage": "vitest run --coverage"
+		"test:coverage": "vitest run --coverage",
+		"typecheck": "tsc --noEmit"
 	},
 	"peerDependencies": {
 		"tailwindcss": ">=4.0.0"
