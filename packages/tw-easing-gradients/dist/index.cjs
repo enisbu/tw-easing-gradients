@@ -144,3 +144,4 @@ var index_default = easingGradients;
   getCoordinatesFromControlPoints,
   parseBezierValues
 });
+module.exports = Object.assign(module.exports.default, module.exports);
