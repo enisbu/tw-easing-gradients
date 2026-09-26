@@ -76,7 +76,7 @@ This plugin requires <strong>Tailwind CSS v4</strong>.
 </Callout>
 
 <Callout type="note" title="Browser Support">
-This plugin uses modern CSS features (<code>oklch</code> and <code>color-mix</code>). For older browsers, a simple linear gradient fallback is automatically included.
+This plugin uses modern CSS features (<code>color-mix</code> in <code>oklab</code>). For older browsers, a simple linear gradient fallback is automatically included.
 </Callout>
 
 ## Next Steps

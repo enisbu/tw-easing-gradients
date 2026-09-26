@@ -32,9 +32,9 @@ function generateGradientStops(
 				return `var(--tw-gradient-from) ${position}%`;
 			}
 			if (percentage === 100) {
-				return `oklch(from var(--tw-gradient-to, oklch(from var(--tw-gradient-from) l c h / 0)) l c h / alpha) ${position}%`;
+				return `var(--tw-gradient-to, transparent) ${position}%`;
 			}
-			return `oklch(from color-mix(in oklab, var(--tw-gradient-to, oklch(from var(--tw-gradient-from) l c h / 0)) ${percentage}%, var(--tw-gradient-from)) l c h / alpha) ${position}%`;
+			return `color-mix(in oklab, var(--tw-gradient-to, transparent) ${percentage}%, var(--tw-gradient-from)) ${position}%`;
 		})
 		.join(', ');
 }
@@ -45,7 +45,7 @@ function makeGradientUtility(
 ): Record<string, string | Record<string, string>> {
 	return {
 		'background-image': `linear-gradient(${cssDirection}, var(--tw-gradient-from), var(--tw-gradient-to, transparent))`,
-		'@supports (color: oklch(from red l c h))': {
+		'@supports (color: color-mix(in oklab, red, red))': {
 			'background-image': `linear-gradient(${cssDirection}, ${gradientStops})`,
 		},
 	};

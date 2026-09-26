@@ -69,7 +69,7 @@ describe('easingGradients plugin', () => {
 			const { utilities } = runPlugin();
 			const supportsBlock =
 				utilities['.bg-ease-to-r'][
-					'@supports (color: oklch(from red l c h))'
+					'@supports (color: color-mix(in oklab, red, red))'
 				];
 			const cssValue = supportsBlock['background-image'];
 
@@ -84,7 +84,7 @@ describe('easingGradients plugin', () => {
 			const { utilities } = runPlugin({ stops: 5 });
 			const supportsBlock =
 				utilities['.bg-ease-to-r'][
-					'@supports (color: oklch(from red l c h))'
+					'@supports (color: color-mix(in oklab, red, red))'
 				];
 			const cssValue = supportsBlock['background-image'];
 
@@ -96,7 +96,7 @@ describe('easingGradients plugin', () => {
 			const { utilities } = runPlugin();
 			const supportsBlock =
 				utilities['.bg-ease-to-r'][
-					'@supports (color: oklch(from red l c h))'
+					'@supports (color: color-mix(in oklab, red, red))'
 				];
 			const cssValue = supportsBlock['background-image'];
 
@@ -152,7 +152,7 @@ describe('easingGradients plugin', () => {
 
 			expect(result['background-image']).toContain('linear-gradient');
 			expect(result['background-image']).toContain('to right');
-			expect(result['@supports (color: oklch(from red l c h))']).toBeDefined();
+			expect(result['@supports (color: color-mix(in oklab, red, red))']).toBeDefined();
 		});
 
 		it('handler returns empty for invalid bezier', () => {

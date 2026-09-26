@@ -31,7 +31,7 @@ A common use case: text overlays on images. The linear gradient stays solid and 
 ## Features
 
 - **Smooth transitions** - No more harsh color bands
-- **oklch color space** - Colors blend naturally without getting gray or muddy in the middle
+- **oklab color space** - Colors blend in the same perceptual space as Tailwind's native gradients
 - **Multiple easing functions** - ease, ease-in, ease-out, ease-in-out
 - **All directions** - 8 gradient directions supported
 - **Custom bezier** - Arbitrary easing curves via `bg-ease-to-r-[0.22,1,0.36,1]`

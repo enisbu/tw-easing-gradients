@@ -58,9 +58,8 @@ describe('Tailwind CSS Integration', () => {
 		expect(css).toContain('linear-gradient');
 		expect(css).toContain('to right');
 		expect(css).toContain('to bottom');
-		expect(css).toContain('@supports (color: oklch(from red l c h))');
-		expect(css).toContain('color-mix');
-		expect(css).toContain('oklch');
+		expect(css).toContain('@supports (color: color-mix(in oklab, red, red))');
+		expect(css).toContain('color-mix(in oklab');
 	});
 
 	it('generates all 32 utility classes', async () => {
@@ -85,7 +84,7 @@ describe('Tailwind CSS Integration', () => {
 	it('uses default 15 stops producing exact gradient positions', async () => {
 		const css = await compileWithPlugin(['bg-ease-to-r']);
 
-		expect(css).toContain('@supports (color: oklch(from red l c h))');
+		expect(css).toContain('@supports (color: color-mix(in oklab, red, red))');
 
 		const expectedPositions = [
 			'0%', '4.7%', '8.9%', '12.8%', '16.6%', '20.4%', '24.4%', '28.8%',
@@ -149,7 +148,7 @@ describe('Tailwind CSS Integration', () => {
 
 		expect(css).toContain('.bg-ease-to-r');
 		expect(css).toContain('linear-gradient');
-		expect(css).toContain('@supports (color: oklch(from red l c h))');
+		expect(css).toContain('@supports (color: color-mix(in oklab, red, red))');
 
 		const colorMixCount = (css.match(/color-mix/g) || []).length;
 		expect(colorMixCount).toBeGreaterThanOrEqual(4);
@@ -171,7 +170,7 @@ describe('Tailwind CSS Integration', () => {
 
 			expect(css).toContain('linear-gradient');
 			expect(css).toContain('to right');
-			expect(css).toContain('@supports (color: oklch(from red l c h))');
+			expect(css).toContain('@supports (color: color-mix(in oklab, red, red))');
 			expect(css).toContain('color-mix');
 		});
 	});

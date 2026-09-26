@@ -46,11 +46,11 @@ const EASING_FUNCTIONS = {
 
 ### 2. Color Interpolation
 
-Colors are interpolated using CSS relative color syntax with `oklch()` for perceptually uniform results. The `color-mix()` function blends colors, then `oklch(from ... l c h / alpha)` extracts the final value for maximum color fidelity.
+Colors are blended with `color-mix()` in the `oklab` color space, the same space Tailwind uses for its native gradients. Mixing with `transparent` keeps the hue of the other color, so fades stay clean.
 
 ### 3. Generated CSS
 
-For a utility like `bg-ease-in-out-to-r`, the plugin generates a `linear-gradient` with multiple color stops using relative color syntax.
+For a utility like `bg-ease-in-out-to-r`, the plugin generates a `linear-gradient` with multiple color stops using `color-mix()`.
 
 <Collapsible title="generated CSS output">
 
@@ -60,12 +60,12 @@ For a utility like `bg-ease-in-out-to-r`, the plugin generates a `linear-gradien
   background-image: linear-gradient(
     to right,
     var(--tw-gradient-from) 0%,
-    oklch(from color-mix(in oklch, var(--tw-gradient-to, oklch(from var(--tw-gradient-from) l c h / 0)) 1.3%, var(--tw-gradient-from)) l c h / alpha) 8.1%,
-    oklch(from color-mix(in oklch, var(--tw-gradient-to, oklch(from var(--tw-gradient-from) l c h / 0)) 4.9%, var(--tw-gradient-from)) l c h / alpha) 15.5%,
-    oklch(from color-mix(in oklch, var(--tw-gradient-to, oklch(from var(--tw-gradient-from) l c h / 0)) 10.4%, var(--tw-gradient-from)) l c h / alpha) 22.5%,
+    color-mix(in oklab, var(--tw-gradient-to, transparent) 1.3%, var(--tw-gradient-from)) 8.1%,
+    color-mix(in oklab, var(--tw-gradient-to, transparent) 4.9%, var(--tw-gradient-from)) 15.5%,
+    color-mix(in oklab, var(--tw-gradient-to, transparent) 10.4%, var(--tw-gradient-from)) 22.5%,
     /* ... more stops interpolated along the easing curve ... */
-    oklch(from color-mix(in oklch, var(--tw-gradient-to, oklch(from var(--tw-gradient-from) l c h / 0)) 98.7%, var(--tw-gradient-from)) l c h / alpha) 91.9%,
-    oklch(from var(--tw-gradient-to, oklch(from var(--tw-gradient-from) l c h / 0)) l c h / alpha) 100%
+    color-mix(in oklab, var(--tw-gradient-to, transparent) 98.7%, var(--tw-gradient-from)) 91.9%,
+    var(--tw-gradient-to, transparent) 100%
   );
 }
 ```
@@ -74,12 +74,7 @@ For a utility like `bg-ease-in-out-to-r`, the plugin generates a `linear-gradien
 
 ## Browser Support
 
-Requires browsers with [CSS relative color syntax](https://caniuse.com/css-relative-colors) support — available in all major browsers since September 2024.
-
-<picture>
-  <source type="image/webp" srcset="https://caniuse.bitsofco.de/image/css-relative-colors.webp" />
-  <img src="https://caniuse.bitsofco.de/image/css-relative-colors.png" alt="Data on support for the css-relative-colors feature across major browsers from caniuse.com" width="100%" />
-</picture>
+Requires browsers with [`color-mix()`](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/color-mix) support: Chrome 111, Safari 16.2 and Firefox 113 or newer. Older browsers get a plain linear gradient as fallback.
 
 ## Exported Functions
 
