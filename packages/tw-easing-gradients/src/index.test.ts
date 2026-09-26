@@ -75,7 +75,7 @@ describe('easingGradients plugin', () => {
 
 			expect(cssValue).toContain('linear-gradient');
 			expect(cssValue).toContain('to right');
-			expect(cssValue).toContain('color-mix(in oklch');
+			expect(cssValue).toContain('color-mix(in oklab');
 			expect(cssValue).toContain('var(--tw-gradient-from)');
 			expect(cssValue).toContain('var(--tw-gradient-to');
 		});
