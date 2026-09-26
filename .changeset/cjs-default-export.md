@@ -2,4 +2,4 @@
 'tw-easing-gradients': patch
 ---
 
-Fix CJS build: `require('tw-easing-gradients')` now returns the plugin function instead of a namespace object, so Tailwind's `@plugin` loading via `createRequire` no longer fails with `y is not a function`.
+Fix `require('tw-easing-gradients')` returning a namespace object instead of the plugin, which broke tools that load Tailwind plugins through `createRequire`.

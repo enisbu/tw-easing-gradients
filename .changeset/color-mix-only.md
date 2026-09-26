@@ -2,4 +2,4 @@
 'tw-easing-gradients': patch
 ---
 
-Simplify generated color stops to plain `color-mix(in oklab, …)` without the `oklch(from …)` wrappers. Output renders the same, CSS is shorter, and the eased gradient now works wherever `color-mix()` is supported (Chrome 111, Safari 16.2, Firefox 113) instead of requiring relative color syntax.
+The eased gradient now kicks in from Chrome 111, Safari 16.2 and Firefox 113 (before: 122, 18 and 128). Older browsers still get a plain linear gradient. Generated CSS is about 60% smaller.
