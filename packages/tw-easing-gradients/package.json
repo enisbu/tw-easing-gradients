@@ -1,6 +1,6 @@
 {
 	"name": "tw-easing-gradients",
-	"version": "1.1.2",
+	"version": "1.2.0",
 	"type": "module",
 	"main": "./dist/index.cjs",
 	"module": "./dist/index.js",
