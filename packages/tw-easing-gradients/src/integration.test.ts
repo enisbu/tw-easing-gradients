@@ -174,4 +174,36 @@ describe('Tailwind CSS Integration', () => {
 			expect(css).toContain('color-mix');
 		});
 	});
+
+	describe('color interpolation modifier', () => {
+		it('mixes in oklab without a modifier', async () => {
+			const css = await compileWithPlugin(['bg-ease-in-out-to-r']);
+			expect(css).toContain('color-mix(in oklab,');
+		});
+
+		it('supports /oklch like bg-linear-*', async () => {
+			const css = await compileWithPlugin(['bg-ease-in-out-to-r/oklch']);
+			expect(css).toContain('.bg-ease-in-out-to-r\\/oklch');
+			expect(css).toContain('color-mix(in oklch,');
+		});
+
+		it('supports hue keywords and arbitrary values', async () => {
+			const css = await compileWithPlugin([
+				'bg-ease-to-b/longer',
+				'bg-ease-to-b/[in_hsl_longer_hue]',
+			]);
+			expect(css).toContain('color-mix(in oklch longer hue,');
+			expect(css).toContain('color-mix(in hsl longer hue,');
+		});
+
+		it('ignores unknown modifiers and values', async () => {
+			const css = await compileWithPlugin(['bg-ease-to-r/foo', 'bg-ease-in-to-r-[0.1,0,0.5,1]']);
+			expect(css).not.toContain('.bg-ease');
+		});
+
+		it('combines with custom bezier values', async () => {
+			const css = await compileWithPlugin(['bg-ease-to-r-[0.22,1,0.36,1]/oklch']);
+			expect(css).toContain('color-mix(in oklch,');
+		});
+	});
 });

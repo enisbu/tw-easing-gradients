@@ -136,6 +136,17 @@ Use arbitrary values to define your own easing curve with four control points:
 
 The four values correspond to the control points of a cubic bezier curve: `x1, y1, x2, y2`.
 
+## Color Interpolation
+
+Colors mix in oklab by default, the same as Tailwind's `bg-linear-*`. Add a modifier to pick another color space, exactly like Tailwind's own gradients:
+
+```html
+<div class="bg-ease-in-out-to-r/oklch from-blue-500 to-yellow-400"></div>
+<div class="bg-ease-to-r/longer from-rose-500 to-indigo-500"></div>
+```
+
+`/oklch` keeps saturated colors vivid through the middle. Skip it for fades to or from `transparent`, white, black or gray: those colors have no hue, and the gradient picks up a wrong tint.
+
 ## Next Steps
 
 <CardGrid cols={2}>

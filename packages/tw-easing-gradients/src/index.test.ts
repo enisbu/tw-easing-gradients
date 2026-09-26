@@ -23,11 +23,15 @@ function runPlugin(options?: { stops?: number }) {
 		config: vi.fn(),
 	} as any);
 
-	return {
-		utilities: addUtilities.mock.calls[0]?.[0] ?? {},
-		addUtilities,
-		matchUtilities,
-	};
+	const matchers = matchUtilities.mock.calls[0]?.[0] ?? {};
+	const utilities = Object.fromEntries(
+		Object.entries(matchers).map(([name, fn]: [string, any]) => [
+			`.${name}`,
+			fn('', { modifier: null }),
+		]),
+	);
+
+	return { utilities, matchers, addUtilities, matchUtilities };
 }
 
 describe('easingGradients plugin', () => {
@@ -43,7 +47,7 @@ describe('easingGradients plugin', () => {
 		it('generates all 32 easing-direction combinations', () => {
 			const { utilities, addUtilities } = runPlugin();
 
-			expect(addUtilities).toHaveBeenCalledTimes(1);
+			expect(addUtilities).not.toHaveBeenCalled();
 			const classNames = Object.keys(utilities);
 
 			expect(classNames).toHaveLength(32);
@@ -132,13 +136,13 @@ describe('easingGradients plugin', () => {
 	});
 
 	describe('matchUtilities for custom bezier', () => {
-		it('registers matchUtilities once with all direction handlers', () => {
+		it('registers matchUtilities once with all 32 handlers', () => {
 			const { matchUtilities } = runPlugin();
 
 			expect(matchUtilities).toHaveBeenCalledTimes(1);
 
 			const matchers = matchUtilities.mock.calls[0][0];
-			expect(Object.keys(matchers)).toHaveLength(8);
+			expect(Object.keys(matchers)).toHaveLength(32);
 			expect(matchers['bg-ease-to-r']).toBeDefined();
 			expect(matchers['bg-ease-to-b']).toBeDefined();
 			expect(matchers['bg-ease-to-tl']).toBeDefined();
@@ -148,7 +152,7 @@ describe('easingGradients plugin', () => {
 			const { matchUtilities } = runPlugin();
 			const matchers = matchUtilities.mock.calls[0][0];
 
-			const result = matchers['bg-ease-to-r']('0.42,0,0.58,1');
+			const result = matchers['bg-ease-to-r']('0.42,0,0.58,1', { modifier: null });
 
 			expect(result['background-image']).toContain('linear-gradient');
 			expect(result['background-image']).toContain('to right');
@@ -159,8 +163,36 @@ describe('easingGradients plugin', () => {
 			const { matchUtilities } = runPlugin();
 			const matchers = matchUtilities.mock.calls[0][0];
 
-			expect(matchers['bg-ease-to-r']('invalid')).toEqual({});
+			expect(matchers['bg-ease-to-r']('invalid', { modifier: null })).toEqual({});
 		});
+	});
+});
+
+describe('color interpolation modifier', () => {
+	const stopsOf = (modifier: string | null) =>
+		runPlugin().matchers['bg-ease-in-out-to-r']('', { modifier })[
+			'@supports (color: color-mix(in oklab, red, red))'
+		]['background-image'];
+
+	it('mixes in oklab by default', () => {
+		expect(stopsOf(null)).toContain('linear-gradient(to right, ');
+		expect(stopsOf(null)).toContain('color-mix(in oklab,');
+	});
+
+	it('mixes in the resolved interpolation method', () => {
+		expect(stopsOf('in oklch longer hue')).toContain('color-mix(in oklch longer hue,');
+	});
+
+	it('registers Tailwind\'s interpolation modifiers', () => {
+		const modifiers = runPlugin().matchUtilities.mock.calls[0][1].modifiers;
+		expect(modifiers.oklch).toBe('in oklch');
+		expect(modifiers.srgb).toBe('in srgb');
+		expect(modifiers.longer).toBe('in oklch longer hue');
+	});
+
+	it('only accepts bezier values on bg-ease-to-*', () => {
+		const { matchers } = runPlugin();
+		expect(matchers['bg-ease-in-to-r']('0.42,0,0.58,1', { modifier: null })).toEqual({});
 	});
 });
 

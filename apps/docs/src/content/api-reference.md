@@ -46,7 +46,7 @@ const EASING_FUNCTIONS = {
 
 ### 2. Color Interpolation
 
-Colors are blended with `color-mix()` in the `oklab` color space, the same space Tailwind uses for its native gradients. Mixing with `transparent` keeps the hue of the other color, so fades stay clean.
+Colors are blended with `color-mix()` in the `oklab` color space, the same space Tailwind uses for its native gradients. Mixing with `transparent` keeps the hue of the other color, so fades stay clean. A modifier such as `/oklch`, `/longer` or `/[in_hsl]` switches the color space of the `color-mix()` stops, with the same modifiers Tailwind's `bg-linear-*` accepts.
 
 ### 3. Generated CSS
 

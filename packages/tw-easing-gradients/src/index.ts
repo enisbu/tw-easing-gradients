@@ -4,7 +4,7 @@ import {
 	getCoordinatesFromControlPoints,
 	parseBezierValues,
 } from './easing.js';
-import type { EasingFunction, PluginOptions } from './types.js';
+import type { Coordinate, EasingFunction, PluginOptions } from './types.js';
 import { DIRECTIONS, EASING_FUNCTIONS } from './types.js';
 
 export { getCoordinates, getCoordinatesFromControlPoints, parseBezierValues } from './easing.js';
@@ -16,12 +16,23 @@ export type {
 } from './types.js';
 
 type TailwindPlugin = ReturnType<typeof plugin.withOptions<PluginOptions>>;
+type GradientUtility = Record<string, string | Record<string, string>>;
 
 const EASINGS = Object.keys(EASING_FUNCTIONS) as EasingFunction[];
 const DIRECTION_KEYS = Object.keys(DIRECTIONS) as (keyof typeof DIRECTIONS)[];
 
+const INTERPOLATION_METHODS = Object.fromEntries([
+	...['srgb', 'srgb-linear', 'display-p3', 'a98-rgb', 'prophoto-rgb', 'rec2020', 'lab', 'oklab', 'xyz', 'xyz-d50', 'xyz-d65', 'hsl', 'hwb', 'lch', 'oklch'].map(
+		(space) => [space, `in ${space}`],
+	),
+	...['shorter', 'longer', 'increasing', 'decreasing'].map(
+		(hue) => [hue, `in oklch ${hue} hue`],
+	),
+]);
+
 function generateGradientStops(
-	coordinates: Array<{ x: number; y: number }>,
+	coordinates: Coordinate[],
+	method: string,
 ): string {
 	return coordinates
 		.map(({ x, y }) => {
@@ -34,58 +45,52 @@ function generateGradientStops(
 			if (percentage === 100) {
 				return `var(--tw-gradient-to, transparent) ${position}%`;
 			}
-			return `color-mix(in oklab, var(--tw-gradient-to, transparent) ${percentage}%, var(--tw-gradient-from)) ${position}%`;
+			return `color-mix(${method}, var(--tw-gradient-to, transparent) ${percentage}%, var(--tw-gradient-from)) ${position}%`;
 		})
 		.join(', ');
 }
 
 function makeGradientUtility(
 	cssDirection: string,
-	gradientStops: string,
-): Record<string, string | Record<string, string>> {
+	coordinates: Coordinate[],
+	modifier: string | null,
+): GradientUtility {
 	return {
 		'background-image': `linear-gradient(${cssDirection}, var(--tw-gradient-from), var(--tw-gradient-to, transparent))`,
 		'@supports (color: color-mix(in oklab, red, red))': {
-			'background-image': `linear-gradient(${cssDirection}, ${gradientStops})`,
+			'background-image': `linear-gradient(${cssDirection}, ${generateGradientStops(coordinates, modifier ?? INTERPOLATION_METHODS.oklab)})`,
 		},
 	};
 }
 
 const easingGradients: TailwindPlugin = plugin.withOptions<PluginOptions>(
 	(options = {}) =>
-		({ addUtilities, matchUtilities }) => {
+		({ matchUtilities }) => {
 			const stops = options.stops ?? 15;
-			const utilities: Record<
-				string,
-				Record<string, string | Record<string, string>>
-			> = {};
 
-			for (const easing of EASINGS) {
-				const gradientStops = generateGradientStops(
-					getCoordinates(easing, stops),
-				);
-
-				for (const dir of DIRECTION_KEYS) {
-					utilities[`.bg-${easing}-to-${dir}`] =
-						makeGradientUtility(DIRECTIONS[dir], gradientStops);
-				}
-			}
-
-			addUtilities(utilities);
-
-			// Custom bezier via arbitrary values: bg-ease-to-r-[0.22,1,0.36,1]
-			const matchers: Record<string, (value: string) => Record<string, string | Record<string, string>> | {}> = {};
-
-			for (const dir of DIRECTION_KEYS) {
-				matchers[`bg-ease-to-${dir}`] = (value: string) => {
-					const points = parseBezierValues(value);
-					if (!points) return {};
-					const coords = getCoordinatesFromControlPoints(points, stops);
-					return makeGradientUtility(DIRECTIONS[dir], generateGradientStops(coords));
-				};
-			}
-
-			matchUtilities(matchers, { values: {}, type: 'any' });
+			matchUtilities(
+				Object.fromEntries(
+					EASINGS.flatMap((easing) => {
+						const coordinates = getCoordinates(easing, stops);
+						return DIRECTION_KEYS.map((dir) => [
+							`bg-${easing}-to-${dir}`,
+							(value: string, { modifier }: { modifier: string | null }): GradientUtility => {
+								if (!value) {
+									return makeGradientUtility(DIRECTIONS[dir], coordinates, modifier);
+								}
+								const points = easing === 'ease' ? parseBezierValues(value) : null;
+								if (!points) return {};
+								return makeGradientUtility(
+									DIRECTIONS[dir],
+									getCoordinatesFromControlPoints(points, stops),
+									modifier,
+								);
+							},
+						]);
+					}),
+				),
+				{ values: { DEFAULT: '' }, modifiers: INTERPOLATION_METHODS },
+			);
 		},
 );
 

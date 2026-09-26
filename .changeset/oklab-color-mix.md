@@ -1,5 +1,5 @@
 ---
-'tw-easing-gradients': patch
+'tw-easing-gradients': minor
 ---
 
-Fix color tint with `from-transparent`: intermediate stops now mix in `oklab` instead of `oklch`. `transparent` has no hue, so an `oklch` mix pulled the hue to 0 and tinted dark gradients brown/orange. Matches Tailwind's native `bg-linear-*` interpolation.
+Mix color stops in oklab by default and add Tailwind-style interpolation modifiers. `from-transparent` no longer tints dark gradients brown or orange, since `transparent` has no hue and the old oklch mix pulled it to 0. Gradients between two saturated colors (blue to yellow, red to blue) now pass through a softer middle, the same as Tailwind's `bg-linear-*`; add `/oklch` to get the previous vivid look, or any modifier Tailwind supports (`/longer`, `/srgb`, `/[in_hsl_longer_hue]`).
