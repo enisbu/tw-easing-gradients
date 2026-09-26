@@ -15,7 +15,7 @@
 <div align="center">
   <strong>Smooth, naturally blending gradients for Tailwind CSS</strong>
   <br />
-  <sub>Cubic bezier easing • Custom curves • oklch color interpolation • Drop-in replacement</sub>
+  <sub>Cubic bezier easing • Custom curves • oklab color interpolation • Drop-in replacement</sub>
 </div>
 
 ---
@@ -24,7 +24,7 @@
 
 Standard CSS gradients distribute colors linearly, resulting in sharp edges at the start and end of the gradient. This is particularly noticeable in transparency fades, where the transition looks abrupt rather than natural.
 
-This plugin distributes color stops along an easing curve using `color-mix()` in oklch color space, resulting in smooth, natural-looking transitions.
+This plugin distributes color stops along an easing curve using `color-mix()` in the oklab color space, resulting in smooth, natural-looking transitions.
 
 <br />
 <div align="center">
