@@ -5,7 +5,7 @@
   "scripts": {
     "build": "pnpm --filter tw-easing-gradients build",
     "build:docs": "pnpm --filter docs build",
-    "dev": "pnpm --filter docs dev",
+    "dev": "pnpm build && pnpm --filter docs dev",
     "dev:plugin": "pnpm --filter tw-easing-gradients dev",
     "changeset": "changeset",
     "version": "changeset version",

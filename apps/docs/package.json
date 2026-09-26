@@ -7,7 +7,7 @@
 		"dev": "pnpm \"/dev:/\"",
 		"dev:content": "velite dev --watch",
 		"dev:svelte": "vite dev",
-		"build": "velite && node ./scripts/update-velite-output.js && pnpm build:search && vite build",
+		"build": "pnpm --filter tw-easing-gradients build && velite && node ./scripts/update-velite-output.js && pnpm build:search && vite build",
 		"build:search": "node ./scripts/build-search-data.js",
 		"preview": "vite preview",
 		"check": "velite && svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
