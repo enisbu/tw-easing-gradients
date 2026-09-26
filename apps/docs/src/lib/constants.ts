@@ -17,6 +17,17 @@ export const DIRECTION_CSS: Record<string, string> = {
 	tl: 'to top left', tr: 'to top right', bl: 'to bottom left', br: 'to bottom right'
 };
 
+export const INTERPOLATIONS = [
+	{ value: '', label: 'oklab (default)', method: 'in oklab' },
+	{ value: 'oklch', label: 'oklch', method: 'in oklch' },
+	{ value: 'srgb', label: 'srgb', method: 'in srgb' },
+	{ value: 'hsl', label: 'hsl', method: 'in hsl' },
+	{ value: 'longer', label: 'longer hue', method: 'in oklch longer hue' },
+	{ value: 'shorter', label: 'shorter hue', method: 'in oklch shorter hue' },
+	{ value: 'increasing', label: 'increasing hue', method: 'in oklch increasing hue' },
+	{ value: 'decreasing', label: 'decreasing hue', method: 'in oklch decreasing hue' }
+];
+
 export const COLOR_PRESETS = [
 	{ fromHex: BRAND_COLORS.from, toHex: BRAND_COLORS.to, label: 'Indigo → Cyan' },
 	{ fromHex: '#8b5cf6', toHex: '#ec4899', label: 'Violet → Pink' },

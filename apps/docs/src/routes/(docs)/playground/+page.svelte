@@ -2,7 +2,7 @@
 	import { Label, Separator, Select } from '@svecodocs/kit';
 	import ColorPicker, { ChromeVariant } from 'svelte-awesome-color-picker';
 	import CopyButton from '$lib/components/CopyButton.svelte';
-	import { BRAND_COLORS, EASING_CURVES, DIRECTION_CSS, COLOR_PRESETS, type BezierCurve } from '$lib/constants';
+	import { BRAND_COLORS, EASING_CURVES, COLOR_PRESETS, INTERPOLATIONS, type BezierCurve } from '$lib/constants';
 	import { buildGradientStyle, hexToArbitrary, curveToSvgPath } from '$lib/gradient-utils';
 	import ArrowUp from 'phosphor-svelte/lib/ArrowUp';
 	import ArrowDown from 'phosphor-svelte/lib/ArrowDown';
@@ -36,6 +36,7 @@
 	let toHex = $state(BRAND_COLORS.to);
 	let easing = $state('ease-in-out');
 	let direction = $state('r');
+	let interpolation = $state('');
 	let customCurve = $state<BezierCurve>([0.35, 0, 0.2, 1]);
 	let activeHandle = $state<1 | 2 | null>(null);
 
@@ -43,17 +44,22 @@
 	let currentCurve = $derived(isCustom ? customCurve : EASING_CURVES[easing]);
 
 	let className = $derived(
-		isCustom
+		(isCustom
 			? `bg-ease-to-${direction}-[${customCurve.join(',')}]`
-			: `bg-${easing}-to-${direction}`
+			: `bg-${easing}-to-${direction}`) + (interpolation ? `/${interpolation}` : '')
 	);
 
 	let fullClass = $derived(
 		`${className} from-${hexToArbitrary(fromHex)} to-${hexToArbitrary(toHex)}`
 	);
 
-	let previewClass = $derived(isCustom ? '' : `bg-${easing}-to-${direction}`);
-	let customStyle = $derived(isCustom ? buildGradientStyle(customCurve, direction) : '');
+	let usesInlineStyle = $derived(isCustom || interpolation !== '');
+	let previewClass = $derived(usesInlineStyle ? '' : `bg-${easing}-to-${direction}`);
+	let customStyle = $derived(
+		usesInlineStyle
+			? buildGradientStyle(currentCurve, direction, INTERPOLATIONS.find((i) => i.value === interpolation)?.method)
+			: ''
+	);
 
 	const PLOT_SIZE = 220;
 	let svgPath = $derived(curveToSvgPath(currentCurve, PLOT_SIZE));
@@ -165,6 +171,22 @@
 						</button>
 					{/each}
 				</div>
+			</div>
+
+			<Separator />
+
+			<div class="space-y-2">
+				<Label class="text-muted-foreground text-xs tracking-wider uppercase">Color space</Label>
+				<Select.Root type="single" bind:value={interpolation}>
+					<Select.Trigger class="h-9 w-full">
+						{INTERPOLATIONS.find((i) => i.value === interpolation)?.label}
+					</Select.Trigger>
+					<Select.Content side="top">
+						{#each INTERPOLATIONS as i (i.value)}
+							<Select.Item value={i.value} label={i.label}>{i.label}</Select.Item>
+						{/each}
+					</Select.Content>
+				</Select.Root>
 			</div>
 		</div>
 

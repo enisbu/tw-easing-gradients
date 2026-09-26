@@ -76,7 +76,7 @@ This plugin requires <strong>Tailwind CSS v4</strong>.
 </Callout>
 
 <Callout type="note" title="Browser Support">
-This plugin uses modern CSS features (<code>color-mix</code> in <code>oklab</code>). For older browsers, a simple linear gradient fallback is automatically included.
+This plugin uses <code>color-mix</code> in <code>oklab</code>, supported from Chrome 111, Safari 16.2 and Firefox 113. Older browsers get a plain linear gradient instead.
 </Callout>
 
 ## Next Steps

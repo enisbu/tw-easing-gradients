@@ -2,19 +2,19 @@ import { getCoordinatesFromControlPoints } from 'tw-easing-gradients';
 import type { BezierCurve } from './constants';
 import { DIRECTION_CSS } from './constants';
 
-export function buildGradientStops(curve: BezierCurve): string {
+export function buildGradientStops(curve: BezierCurve, method = 'in oklab'): string {
 	const coords = getCoordinatesFromControlPoints(curve, 15);
 	return coords.map(({ x, y }) => {
 		const pos = Math.round(x * 1000) / 10;
 		const pct = Math.round(y * 1000) / 10;
 		if (pct === 0) return `var(--tw-gradient-from) ${pos}%`;
 		if (pct === 100) return `var(--tw-gradient-to, transparent) ${pos}%`;
-		return `color-mix(in oklab, var(--tw-gradient-to, transparent) ${pct}%, var(--tw-gradient-from)) ${pos}%`;
+		return `color-mix(${method}, var(--tw-gradient-to, transparent) ${pct}%, var(--tw-gradient-from)) ${pos}%`;
 	}).join(', ');
 }
 
-export function buildGradientStyle(curve: BezierCurve, direction: string): string {
-	return `background-image: linear-gradient(${DIRECTION_CSS[direction]}, ${buildGradientStops(curve)});`;
+export function buildGradientStyle(curve: BezierCurve, direction: string, method?: string): string {
+	return `background-image: linear-gradient(${DIRECTION_CSS[direction]}, ${buildGradientStops(curve, method)});`;
 }
 
 export function hexToArbitrary(hex: string): string {
