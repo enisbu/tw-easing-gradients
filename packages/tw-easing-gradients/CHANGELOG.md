@@ -1,5 +1,16 @@
 # Changelog
 
+## 1.2.0
+
+### Minor Changes
+
+- b0e6774: Colors now mix in oklab by default, like Tailwind's `bg-linear-*`. This fixes a brown tint on fades from `transparent`. Gradients between two saturated colors get a softer middle; add `/oklch` for the previous look. All of Tailwind's interpolation modifiers work: `/oklch`, `/longer`, `/[in_hsl]` and so on.
+
+### Patch Changes
+
+- c2b7f5f: Fix `require('tw-easing-gradients')` returning a namespace object instead of the plugin, which broke tools that load Tailwind plugins through `createRequire`.
+- 78f8c89: The eased gradient now kicks in from Chrome 111, Safari 16.2 and Firefox 113 (before: 122, 18 and 128). Older browsers still get a plain linear gradient. Generated CSS is about 60% smaller.
+
 ## 1.1.0
 
 ### Minor Changes
