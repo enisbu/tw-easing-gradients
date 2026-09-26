@@ -22,12 +22,8 @@ const EASINGS = Object.keys(EASING_FUNCTIONS) as EasingFunction[];
 const DIRECTION_KEYS = Object.keys(DIRECTIONS) as (keyof typeof DIRECTIONS)[];
 
 const INTERPOLATION_METHODS = Object.fromEntries([
-	...['srgb', 'srgb-linear', 'display-p3', 'a98-rgb', 'prophoto-rgb', 'rec2020', 'lab', 'oklab', 'xyz', 'xyz-d50', 'xyz-d65', 'hsl', 'hwb', 'lch', 'oklch'].map(
-		(space) => [space, `in ${space}`],
-	),
-	...['shorter', 'longer', 'increasing', 'decreasing'].map(
-		(hue) => [hue, `in oklch ${hue} hue`],
-	),
+	...['oklab', 'oklch', 'srgb', 'hsl'].map((space) => [space, `in ${space}`]),
+	...['longer', 'shorter', 'increasing', 'decreasing'].map((hue) => [hue, `in oklch ${hue} hue`]),
 ]);
 
 function generateGradientStops(

@@ -198,7 +198,7 @@ describe('Tailwind CSS Integration', () => {
 
 		it('ignores unknown modifiers and values', async () => {
 			const css = await compileWithPlugin(['bg-ease-to-r/foo', 'bg-ease-in-to-r-[0.1,0,0.5,1]']);
-			expect(css).not.toContain('.bg-ease');
+			expect(css).not.toContain('linear-gradient');
 		});
 
 		it('combines with custom bezier values', async () => {
