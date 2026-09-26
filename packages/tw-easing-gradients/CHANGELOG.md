@@ -2,6 +2,8 @@
 
 ## 1.2.0
 
+> **Heads-up:** gradients between two saturated colors (for example `from-blue-500 to-yellow-400`) now look softer in the middle. Add `/oklch` to keep the previous look, for example `bg-ease-to-r/oklch`. Fades to or from `transparent`, black or white are not affected.
+
 ### Minor Changes
 
 - b0e6774: Colors now mix in oklab by default, like Tailwind's `bg-linear-*`. This fixes a brown tint on fades from `transparent`. Gradients between two saturated colors get a softer middle; add `/oklch` for the previous look. All of Tailwind's interpolation modifiers work: `/oklch`, `/longer`, `/[in_hsl]` and so on.
